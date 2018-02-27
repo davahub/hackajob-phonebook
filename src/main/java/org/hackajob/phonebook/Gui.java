@@ -45,7 +45,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-public class PhonebookApp extends JFrame {
+public class Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtFieldQuest;
 	private Color clrTransparent;
@@ -53,14 +53,16 @@ public class PhonebookApp extends JFrame {
 	private JTextField txtFirstName, txtLastName, txtAge, txtExpiry, txtImage;
 	private JLabel lblError;
 	
-	private static JTextPane txtpnConversation, txtpnInfo;
-	private static JPanel registerPanel, webBrowserPanel;
-	private static JScrollPane scrBackground;
+	public static JTextPane txtpnConversation, txtpnInfo;
+	public static JPanel registerPanel, webBrowserPanel;
+	public static JScrollPane scrBackground;
+	
+	private Reasoner reasoner;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				PhonebookApp frame = new PhonebookApp();
+				Gui frame = new Gui();
 				frame.setVisible(true);
 				
 				
@@ -71,7 +73,7 @@ public class PhonebookApp extends JFrame {
 	private Client client;
 	private WebTarget target;
 
-	public PhonebookApp() {
+	public Gui() {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -312,7 +314,7 @@ public class PhonebookApp extends JFrame {
 				// Set up the file chooser.
 				JFileChooser fc = new JFileChooser();
 				// Show it.
-				fc.showDialog(PhonebookApp.this, "Attach");
+				fc.showDialog(Gui.this, "Attach");
 				File file = fc.getSelectedFile();
 				txtImage.setText(file.getAbsolutePath());
 			}
@@ -402,6 +404,9 @@ public class PhonebookApp extends JFrame {
 		HTMLDocument docInfo = new HTMLDocument();
 		txtpnInfo.setEditorKit(kitInfo);
 		txtpnInfo.setDocument(docInfo);
+		
+		// INITIALIZE REASONER
+        reasoner = new Reasoner();
 
 		// TEXTFIELD QUESTION
 		txtFieldQuest = new JTextField() {
@@ -420,6 +425,9 @@ public class PhonebookApp extends JFrame {
 		txtFieldQuest.setOpaque(false);
 		txtFieldQuest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String question = txtFieldQuest.getText();
+                reasoner.reason(question);
+				
 				txtFieldQuest.setText("");
 			}
 		});
@@ -453,6 +461,8 @@ public class PhonebookApp extends JFrame {
 		layeredPane.setLayer(btnRegister, 4);
 		btnRegister.setBounds(830, 592, 117, 25);
 		layeredPane.add(btnRegister);
+		
+		scrBackground.setViewportView(txtpnInfo);
 	}
 	
 	public Date customDate(String dateString) {
