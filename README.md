@@ -1,6 +1,6 @@
 # PhoneBook - Hackajob Challenge
 
-![live demo](https://img.shields.io/badge/demo-online-green.svg)
+[![live demo](https://img.shields.io/badge/demo-online-green.svg)](https://dl.dropboxusercontent.com/s/8jr80msud5xzx3m/phonebook.jar?dl=0)
 
 
 This is demo program developed for hackajob challenge. The task is to build a single page application that will play the role of a phone book.  Requirements - using this api to get the data you need: http://www.mocky.io/v2/581335f71000004204abaf83 - to display all the contacts and add basic filters for searching and sorting.
