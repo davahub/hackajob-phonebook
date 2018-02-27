@@ -11,7 +11,13 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 public class Reasoner {
-	private State currentState, greetingState, listContactState, endState;
+	private State currentState, 
+	greetingState, 
+	listContactState,
+	searchContactState,
+	searchContactActionState,
+	sortContactState,
+	endState;
 	private PhoneBook phonebook;
 
 	public Reasoner() {
@@ -25,11 +31,17 @@ public class Reasoner {
 		// GREETING
 		greetingState.addKeyword(21, "list contacts");
 		greetingState.addKeyword(21, "list contact");
+		greetingState.addKeyword(3, "search contact");
+		greetingState.addKeyword(3, "search");
 		greetingState.addKeyword(2, "list");
 		greetingState.addKeyword(13, "hi");
 		greetingState.addKeyword(13, "hello");
 		greetingState.addKeyword(14, "how are you");
 		greetingState.addKeyword(0, "quit");
+		// SORT 
+		greetingState.addKeyword(4, "sort by name");
+		greetingState.addKeyword(41, "sort by telephone");
+		greetingState.addKeyword(42, "sort by address");
 
 		// LIST CONTACTS
 		listContactState = new State();
@@ -44,6 +56,13 @@ public class Reasoner {
 		listContactState.addKeyword(21, "show all contacts");
 		listContactState.addKeyword(21, "display all contacts");
 		
+		// SEARCH CONTACTS
+		searchContactState = new State();
+		searchContactState.addKeyword(31, "yes");
+		searchContactState.addKeyword(15, "no");
+		searchContactActionState = new State();
+		searchContactActionState.addKeyword(21, "[]");
+		
 		// WOULD YOU LIKE TO QUIT?
 		endState = new State();
 		endState.addKeyword(-100, "yes");
@@ -57,6 +76,9 @@ public class Reasoner {
 	public void reason(String aQuestion) {
 		displayUserResponse(aQuestion);
 		int keyvalue = currentState.search(aQuestion);
+		if (currentState.equals(searchContactActionState)) {
+			keyvalue = 32;
+		}
 		Gui.txtpnInfo.setText("");
 		switch (keyvalue) {
 		case 1:
@@ -100,10 +122,50 @@ public class Reasoner {
 			append(Gui.txtpnInfo, "</table></body>");
 			currentState = greetingState;
 			break;
+			
+		// SEARCH CONTACT	
+		case 3:
+			displayBotResponse("Would you like to search all contacts?");
+			currentState = searchContactState;
+			break;	
+		case 31:
+			displayBotResponse("Enter search criteria?");
+			currentState = searchContactActionState;
+			break;
+		case 32:
+			displayBotResponse("Displaying search results.");
+			append(Gui.txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
+					+ "body table { margin-left: 1px; font-family: verdana; font-size: 12px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 4px black;} </style>"
+					+ "<table border='1' cellspacing='10'>");
+			for (Contact contact : phonebook.searchContacts(aQuestion)) {
+				append(Gui.txtpnInfo,
+						"<tr> " + " <td class='names'>" + "Name: "+ contact.getName() 
+								+ " <br/> Phone: " + contact.getPhone_number() 
+								+ " <br/>  Address: " + contact.getAddress() 
+								+ "</td></tr>");
+			}
+			append(Gui.txtpnInfo, "</table></body>");
+			currentState = greetingState;
+			break;	
+			
+		// SORT CONTACT	
+		case 4:
+			displayBotResponse("Sorting contacts by name");
+			currentState = greetingState;
+			break;	
+		case 41:
+			displayBotResponse("Sorting contacts by telephone");
+			currentState = greetingState;
+			break;
+		case 42:
+			displayBotResponse("Sorting contacts by address");
+			currentState = greetingState;
+			break;	
 
 		// ERRORS AND QUIT
 		case -1:
 			displayBotResponse("Sorry I cannot understand your question...");
+			currentState = greetingState;
 			break;
 		case 0:
 			displayBotResponse("Are you sure? Would you like to quit the program?");

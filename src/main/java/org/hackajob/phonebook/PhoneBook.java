@@ -33,19 +33,23 @@ public class PhoneBook {
 		return contacts.size();
 	}
 
-	public PhoneBook searchContacts(String searchValue) {
-		PhoneBook phonebook = new PhoneBook();
+	public ArrayList<Contact> searchContacts(String searchValue) {
+		ArrayList<Contact> searchContacts = new ArrayList<Contact>();
 		for (Contact contact : contacts) {
 			String name = contact.getName();
 			String address = contact.getAddress();
 			String phoneNumber = contact.getPhone_number();
-			if (name.equalsIgnoreCase(searchValue) 
-					|| address.equalsIgnoreCase(searchValue) 
-					|| phoneNumber.equalsIgnoreCase(searchValue)) {
-				phonebook.addContact(contact);
+			if (name.toLowerCase().contains(searchValue.toLowerCase()) 
+					|| address.toLowerCase().contains(searchValue.toLowerCase()) 
+					|| phoneNumber.toLowerCase().contains(searchValue.toLowerCase())) {
+				searchContacts.add(contact);
 			}
 		}
-		return phonebook;
+		return searchContacts;
+	}
+	
+	public void sortByName() {
+		
 	}
 
 	public List<Contact> getContacts() {
