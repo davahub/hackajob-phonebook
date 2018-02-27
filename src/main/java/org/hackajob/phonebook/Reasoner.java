@@ -2,6 +2,7 @@ package org.hackajob.phonebook;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -109,17 +110,7 @@ public class Reasoner {
 			break;
 		case 21:
 			displayBotResponse("Listing contacts.");
-			append(Gui.txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
-					+ "body table { margin-left: 1px; font-family: verdana; font-size: 12px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 4px black;} </style>"
-					+ "<table border='1' cellspacing='10'>");
-			for (Contact contact : phonebook.getContacts()) {
-				append(Gui.txtpnInfo,
-						"<tr> " + " <td class='names'>" + "Name: "+ contact.getName() 
-								+ " <br/> Phone: " + contact.getPhone_number() 
-								+ " <br/>  Address: " + contact.getAddress() 
-								+ "</td></tr>");
-			}
-			append(Gui.txtpnInfo, "</table></body>");
+			displayContacts(phonebook.getContacts());
 			currentState = greetingState;
 			break;
 			
@@ -134,31 +125,27 @@ public class Reasoner {
 			break;
 		case 32:
 			displayBotResponse("Displaying search results.");
-			append(Gui.txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
-					+ "body table { margin-left: 1px; font-family: verdana; font-size: 12px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 4px black;} </style>"
-					+ "<table border='1' cellspacing='10'>");
-			for (Contact contact : phonebook.searchContacts(aQuestion)) {
-				append(Gui.txtpnInfo,
-						"<tr> " + " <td class='names'>" + "Name: "+ contact.getName() 
-								+ " <br/> Phone: " + contact.getPhone_number() 
-								+ " <br/>  Address: " + contact.getAddress() 
-								+ "</td></tr>");
-			}
-			append(Gui.txtpnInfo, "</table></body>");
+			displayContacts(phonebook.searchContacts(aQuestion));
 			currentState = greetingState;
 			break;	
 			
 		// SORT CONTACT	
 		case 4:
 			displayBotResponse("Sorting contacts by name");
+			phonebook.sortByName();
+			displayContacts(phonebook.getContacts());
 			currentState = greetingState;
 			break;	
 		case 41:
 			displayBotResponse("Sorting contacts by telephone");
+			phonebook.sortByTelephone();
+			displayContacts(phonebook.getContacts());
 			currentState = greetingState;
 			break;
 		case 42:
 			displayBotResponse("Sorting contacts by address");
+			phonebook.sortByAddress();
+			displayContacts(phonebook.getContacts());
 			currentState = greetingState;
 			break;	
 
@@ -188,6 +175,20 @@ public class Reasoner {
 	public void displayBotResponse(String response) {
 		append(Gui.txtpnConversation,
 				"<p style='color:00FF33;font-size:13px;'><b>Bot: </b>" + response + "</p>");
+	}
+	
+	public void displayContacts(ArrayList<Contact> contacts) {
+		append(Gui.txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
+				+ "body table { margin-left: 1px; font-family: verdana; font-size: 12px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 4px black;} </style>"
+				+ "<table border='1' cellspacing='10'>");
+		for (Contact contact : contacts) {
+			append(Gui.txtpnInfo,
+					"<tr> " + " <td class='names'>" + "Name: "+ contact.getName() 
+							+ " <br/> Phone: " + contact.getPhone_number() 
+							+ " <br/>  Address: " + contact.getAddress() 
+							+ "</td></tr>");
+		}
+		append(Gui.txtpnInfo, "</table></body>");
 	}
 	
 	public void append(JTextPane aTxtPane, String aHTML) {
