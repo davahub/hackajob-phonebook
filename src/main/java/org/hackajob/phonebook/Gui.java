@@ -131,7 +131,7 @@ public class Gui extends JFrame {
 		
 		try {
 			kitConvers.insertHTML(docConvers, docConvers.getLength(),
-					"<p style='color:00FF33;font-size:13px;'><b>Gymbot:</b> Hi, I am smart Phone bot how can I help?<br>"
+					"<p style='color:00FF33;font-size:13px;'><b>Bot:</b> Hi, I am smart PhoneBook bot how can I help?<br>"
 					+ "Accepted inputs: <br>\"list contacts\", "
 					+ "<br>\"search\", <br>\"sort by name\", <br>\"sort by telephone\", <br>\"sort by address\"</p>",
 					0, 0, null);
