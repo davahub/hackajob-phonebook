@@ -11,29 +11,12 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 public class Reasoner {
-	private int keyvalue;
 	private State currentState, greetingState, listContactState, endState;
 	private PhoneBook phonebook;
-	private JTextPane txtpnConversation, txtpnInfo;
-	private JPanel registerPanel, webBrowserPanel;
-	private JScrollPane scrBackground;
-	private String question;
 
 	public Reasoner() {
 		phonebook = new PhoneBook();
-		Contact contact = new Contact();
-		contact.setName("dava");
-		contact.setAddress("addr");
-		contact.setPhone_number("111");
-		phonebook.addContact(contact);
-
 		setupState();
-		
-		txtpnConversation = Gui.txtpnConversation;
-		txtpnInfo = Gui.txtpnInfo;
-		registerPanel = Gui.registerPanel;
-		webBrowserPanel = Gui.webBrowserPanel;
-		scrBackground = Gui.scrBackground;
 	}
 	
 	public void setupState() {
@@ -72,11 +55,9 @@ public class Reasoner {
 	}
 
 	public void reason(String aQuestion) {
-		question = aQuestion;
 		displayUserResponse(aQuestion);
-		keyvalue = currentState.search(aQuestion);
-		txtpnInfo.setText("");
-		scrBackground.setViewportView(txtpnInfo);
+		int keyvalue = currentState.search(aQuestion);
+		Gui.txtpnInfo.setText("");
 		switch (keyvalue) {
 		case 1:
 			displayBotResponse("Ok then what else can I do for you?");
@@ -99,27 +80,26 @@ public class Reasoner {
 			currentState = greetingState;
 			break;
 
-		// LIST MEMBERS
+		// LIST CONTACTS
 		case 2:
 			displayBotResponse("Would you like to list all members?");
 			currentState = listContactState;
 			break;
 		case 21:
 			displayBotResponse("Listing contacts.");
-			append(txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
-					+ "body table { margin-left: 1px; font-family: verdana; font-size: 10px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 1px black;} </style>"
+			append(Gui.txtpnInfo, "" + "<style type='text/css' media='screen'> body { margin: 0; text-decoration: none; }"
+					+ "body table { margin-left: 1px; font-family: verdana; font-size: 12px; color: #FFFF99;} .names { width: 200px;} table td { border: solid 4px black;} </style>"
 					+ "<table border='1' cellspacing='10'>");
 			for (Contact contact : phonebook.getContacts()) {
-				append(txtpnInfo,
+				append(Gui.txtpnInfo,
 						"<tr> " + " <td class='names'>" + "Name: "+ contact.getName() 
 								+ " <br/> Phone: " + contact.getPhone_number() 
 								+ " <br/>  Address: " + contact.getAddress() 
 								+ "</td></tr>");
 			}
-			append(txtpnInfo, "</table></body>");
+			append(Gui.txtpnInfo, "</table></body>");
 			currentState = greetingState;
 			break;
-
 
 		// ERRORS AND QUIT
 		case -1:
@@ -136,17 +116,16 @@ public class Reasoner {
 			displayBotResponse("ERROR: Unknown state plz contact admin...");
 			break;
 		}
-
 	}
 	
 	public void displayUserResponse(String response) {
-		append(txtpnConversation,
+		append(Gui.txtpnConversation,
 				"<p style='color:white;font-size:13px;'><b>You: </b>" + response + "</p>");
 	}
 	
 	public void displayBotResponse(String response) {
-		append(txtpnConversation,
-				"<p style='color:00FF33;font-size:13px;'><b>Gymbot: </b>" + response + "</p>");
+		append(Gui.txtpnConversation,
+				"<p style='color:00FF33;font-size:13px;'><b>Bot: </b>" + response + "</p>");
 	}
 	
 	public void append(JTextPane aTxtPane, String aHTML) {
@@ -154,12 +133,11 @@ public class Reasoner {
 		HTMLDocument doc = (HTMLDocument) aTxtPane.getDocument();
 		try {
 			kit.insertHTML(doc, doc.getLength(), aHTML, 0, 0, null);
-			txtpnConversation.setBackground(new Color(0, 0, 0, 100));
+			Gui.txtpnConversation.setBackground(new Color(0, 0, 0, 100));
 		} catch (BadLocationException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex2) {
 			ex2.printStackTrace();
 		}
 	}
-
 }

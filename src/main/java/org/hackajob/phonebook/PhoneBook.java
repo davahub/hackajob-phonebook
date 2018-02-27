@@ -3,11 +3,22 @@ package org.hackajob.phonebook;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+
 public class PhoneBook {
 	private List<Contact> contacts;
+	
+	private Client client;
+	private WebTarget target;
 
 	public PhoneBook() {
-		contacts = new ArrayList<Contact>();
+		client = ClientBuilder.newClient();
+	    target = client.target("http://www.mocky.io/v2/581335f71000004204abaf83");
+	    ContactResponse response = target.request(MediaType.APPLICATION_JSON).get(ContactResponse.class);
+		contacts = response.getContacts();
 	}
 
 	public void addContact(Contact aContact) {
