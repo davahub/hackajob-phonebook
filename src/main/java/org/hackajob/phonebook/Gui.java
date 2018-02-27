@@ -83,8 +83,8 @@ public class Gui extends JFrame {
 
 		JLabel lblPicture = new JLabel("");
 		
-		final URL url = Thread.currentThread().getContextClassLoader().getResource("phonebook-bg.jpg");
-		lblPicture.setIcon(new ImageIcon(url.getFile()));
+		URL url = Gui.class.getResource("/phonebook-bg.jpg");
+		lblPicture.setIcon(new ImageIcon(url));
 		lblPicture.setBounds(0, 0, 1200, 700);
 		layeredPane.add(lblPicture);
 
@@ -131,7 +131,9 @@ public class Gui extends JFrame {
 		
 		try {
 			kitConvers.insertHTML(docConvers, docConvers.getLength(),
-					"<p style='color:00FF33;font-size:13px;'><b>Gymbot:</b> Hi, I am smart Phone bot how can I help?</p><br>",
+					"<p style='color:00FF33;font-size:13px;'><b>Gymbot:</b> Hi, I am smart Phone bot how can I help?<br>"
+					+ "Accepted inputs: <br>\"list contacts\", "
+					+ "<br>\"search\", <br>\"sort by name\", <br>\"sort by telephone\", <br>\"sort by address\"</p>",
 					0, 0, null);
 		} catch (BadLocationException e1) {
 			e1.printStackTrace();
