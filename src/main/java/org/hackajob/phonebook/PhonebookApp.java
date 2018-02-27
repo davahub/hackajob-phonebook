@@ -40,6 +40,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 
 public class PhonebookApp extends JFrame {
 	private JPanel contentPane;
@@ -58,9 +62,14 @@ public class PhonebookApp extends JFrame {
 			public void run() {
 				PhonebookApp frame = new PhonebookApp();
 				frame.setVisible(true);
+				
+				
 			}
 		});
 	}
+	
+	private Client client;
+	private WebTarget target;
 
 	public PhonebookApp() {
 		addWindowListener(new WindowAdapter() {
@@ -129,9 +138,15 @@ public class PhonebookApp extends JFrame {
 		HTMLDocument docConvers = new HTMLDocument();
 		txtpnConversation.setEditorKit(kitConvers);
 		txtpnConversation.setDocument(docConvers);
+		
+		client = ClientBuilder.newClient();
+	    target = client.target("http://www.mocky.io/v2/581335f71000004204abaf83");
+	    ContactResponse response = target.request(MediaType.APPLICATION_JSON).get(ContactResponse.class);
+	    
 		try {
 			kitConvers.insertHTML(docConvers, docConvers.getLength(),
-					"<p style='color:00FF33;font-size:13px;'><b>Gymbot:</b> Hi, I am smart Phone bot how can I help?</p>",
+					"<p style='color:00FF33;font-size:13px;'><b>Gymbot:</b> Hi, I am smart Phone bot how can I help?</p><br>"
+					+ "<p>name: " + response.getContacts().get(0).getName() + "</p>",
 					0, 0, null);
 		} catch (BadLocationException e1) {
 			e1.printStackTrace();
@@ -440,13 +455,6 @@ public class PhonebookApp extends JFrame {
 		layeredPane.add(btnRegister);
 	}
 	
-//	public void getImage(final String pathAndFileName) {
-//	    final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
-//	    url.getFile()
-////	    return Toolkit.getDefaultToolkit().getImage(url);
-//	    Toolkit.getDefaultToolkit().getImage(filename)
-//	}
-
 	public Date customDate(String dateString) {
 		Date date = new Date();
 		try {
